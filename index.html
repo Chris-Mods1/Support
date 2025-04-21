@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cours Hacking - Kaya Tech</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #1f4037, #99f2c8);
+      color: #fff;
+      padding: 60px 20px;
+      margin: 0;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 30px;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .btn {
+      background: #ff0000;
+      color: white;
+      padding: 18px 30px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 1.2em;
+      font-weight: 600;
+      margin: 20px 10px;
+      display: inline-block;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .btn:hover {
+      background: #cc0000;
+      transform: scale(1.05);
+    }
+
+    .btn-telegram {
+      background: #0088cc;
+    }
+
+    .btn-telegram:hover {
+      background: #0077b3;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+    }
+
+    .btn-whatsapp:hover {
+      background: #1ebc55;
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 50px auto;
+      text-align: left;
+    }
+
+    .section h2 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+      color: #fff;
+      border-bottom: 3px solid #00c6ff;
+      padding-bottom: 12px;
+    }
+
+    .lecon, .pdf, .video {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .lecon:hover, .pdf:hover, .video:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.02);
+    }
+
+    .lecon a, .pdf a, .video a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .lecon a:hover, .pdf a:hover, .video a:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      margin-top: 100px;
+      font-size: 16px;
+      color: #ccc;
+      text-align: center;
+    }
+
+    .footer a {
+      color: #00c6ff;
+      text-decoration: none;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Cours Hacking par Kaya Tech</h1>
+    <a class="btn" href="https://youtube.com/@kayatech243?si=7HarsTyFRhgVQdRy" target="_blank">
+      Accédez à nos tutos gratuits sur YouTube
+    </a>
+    <a class="btn btn-telegram" href="https://t.me/techkaya" target="_blank">
+      Rejoindre notre chaîne Telegram
+    </a>
+    <a class="btn btn-whatsapp" href="https://whatsapp.com/channel/0029VbA2c1L84Om2ePrKij1x" target="_blank">
+      Rejoindre notre chaine WhatsApp
+    </a>
+  </header>
+
+  <div class="section" id="leconsContainer">
+    <h2>Leçons</h2>
+    Chargement des leçons...
+  </div>
+
+  <div class="section" id="pdfContainer">
+    <h2>PDF à Télécharger</h2>
+    Chargement des PDF...
+  </div>
+
+  <div class="section" id="videoContainer">
+    <h2>Vidéos</h2>
+    Chargement des vidéos...
+  </div>
+
+  <footer class="footer">
+    <p>Développé avec passion par <a href="https://www.kaya-tech.com" target="_blank">Kaya Tech</a></p>
+  </footer>
+
+  <script>
+    // URL du fichier CSV de Google Sheets
+    const csvURL = "https://docs.google.com/spreadsheets/d/1MBdn3lnt3KJoOXh7q0_81vst9dZ-Bdo1Q8dXqdVQOh8/export?format=csv";
+
+    fetch(csvURL)
+      .then(res => res.text())
+      .then(data => {
+        const leconsContainer = document.getElementById("leconsContainer");
+        const pdfContainer = document.getElementById("pdfContainer");
+        const videoContainer = document.getElementById("videoContainer");
+
+        leconsContainer.innerHTML = "";
+        pdfContainer.innerHTML = "";
+        videoContainer.innerHTML = "";
+
+        // Séparation des lignes et gestion des données
+        const lignes = data.split('\n').slice(1); // Ignorer l'en-tête
+
+        lignes.forEach(ligne => {
+          const [titre, description, lien, type] = ligne.split(',');
+
+          if (titre && description && lien && type) {
+            const div = document.createElement("div");
+
+            if (type.trim() === 'Leçon') {
+              div.className = "lecon";
+              div.innerHTML = `<strong>${titre}</strong><br>${description}<br><a href="${lien}" target="_blank">Voir la leçon</a>`;
+              leconsContainer.appendChild(div);
+            } else if (type.trim() === 'PDF') {
+              div.className = "pdf";
+              div.innerHTML = `<strong>${titre}</strong><br><a href="${lien}" target="_blank">Télécharger le PDF</a>`;
+              pdfContainer.appendChild(div);
+            } else if (type.trim() === 'Video') {
+              div.className = "video";
+              div.innerHTML = `<strong>${titre}</strong><br><a href="${lien}" target="_blank">Regarder la vidéo</a>`;
+              videoContainer.appendChild(div);
+            }
+          }
+        });
+      })
+      .catch(err => {
+        console.error("Erreur de chargement des données :", err);
+        document.getElementById('leconsContainer').innerHTML = "<p>Erreur de chargement des leçons.</p>";
+        document.getElementById('pdfContainer').innerHTML = "<p>Erreur de chargement des PDF.</p>";
+        document.getElementById('videoContainer').innerHTML = "<p>Erreur de chargement des vidéos.</p>";
+      });
+  </script>
+
+</body>
+</html>
